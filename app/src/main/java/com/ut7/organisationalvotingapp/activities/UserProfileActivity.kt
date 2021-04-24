@@ -29,6 +29,8 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
 
     private var mSelectedImageFileUri: Uri? = null
 
+    private var mUserProfileImageURL: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         //This call the parent constructor
         super.onCreate(savedInstanceState)
@@ -75,33 +77,46 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
 
                 R.id.btn_submit -> {
 
-                    showProgressDialog(resources.getString(R.string.please_wait))
-
-                    FirestoreClass().uploadImageToCloudStorage(this, mSelectedImageFileUri)
-
                     if(validateUserProfileDetails()){
-                        //showErrorSnackBar("Your details are valid. You can update them.", false)
-                        val userHashMap = HashMap<String, Any>()
-                        val mobilenumber = et_mobile_number.text.toString().trim { it <= ' '}
-                        val gender = if(rb_male.isChecked) {
-                            Constants.MALE
-                        } else {
-                            Constants.FEMALE
-                        }
-
-                        if(mobilenumber.isNotEmpty()) {
-                            userHashMap[Constants.MOBILE] = mobilenumber.toLong()
-                        }
-                        //key: gender value: female
-                        userHashMap[Constants.GENDER] = gender
 
                         showProgressDialog(resources.getString(R.string.please_wait))
 
-                        FirestoreClass().updateUserProfileData(this, userHashMap)
+                        if(mSelectedImageFileUri != null)
+                        FirestoreClass().uploadImageToCloudStorage(this, mSelectedImageFileUri)
+                        else {
+                            updateUserProfileDetails()
+                        }
+
                     }
                 }
             }
         }
+    }
+
+    private fun updateUserProfileDetails() {
+        val userHashMap = HashMap<String, Any>()
+        val mobilenumber = et_mobile_number.text.toString().trim { it <= ' '}
+        val gender = if(rb_male.isChecked) {
+            Constants.MALE
+        } else {
+            Constants.FEMALE
+        }
+
+        if(mUserProfileImageURL.isNotEmpty()) {
+            userHashMap[Constants.IMAGE] = mUserProfileImageURL
+        }
+
+        if(mobilenumber.isNotEmpty()) {
+            userHashMap[Constants.MOBILE] = mobilenumber.toLong()
+        }
+
+        //key: gender value: female
+        userHashMap[Constants.GENDER] = gender
+
+        userHashMap[Constants.COMPLETE_PROFILE] = 1
+        //showProgressDialog(resources.getString(R.string.please_wait))
+
+        FirestoreClass().updateUserProfileData(this, userHashMap)
     }
 
     fun userProfileUpdateSuccess() {
@@ -172,11 +187,8 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
     }
 
     fun imageUploadSuccess(imageURL: String) {
-        hideProgressDialog()
-        Toast.makeText(
-            this@UserProfileActivity,
-            "Image uploaded successfully! The image URL is $imageURL",
-            Toast.LENGTH_SHORT
-        ).show()
+        //hideProgressDialog()
+        mUserProfileImageURL = imageURL
+        updateUserProfileDetails()
     }
 }
