@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Software-Engineering-master.iml" filepath="$PROJECT_DIR$/.idea/Software-Engineering-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Organisational_Voting_App.iml" filepath="$PROJECT_DIR$/.idea/modules/Organisational_Voting_App.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Organisational_Voting_App.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Organisational_Voting_App.app.iml" />
     </modules>
   </component>
 </project>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FFBB86FC</color>
+    <color name="colorPrimaryDark">#FF6200EE</color>
+    <color name="colorAccent">#FF3700B3</color>
+    <color name="ColorThemeTeal">#FF03DAC5</color>
+    <color name="ColorThemeDarkTeal">#FF018786</color>
+    <color name="colorPrimaryText">#222934</color>
+    <color name="colorSecondaryText">#989898</color>
+    <color name="colorWhite">#FFFFFFFF</color>
+
+    <color name="colorSnackBarSuccess">#8BC34A</color>
+    <color name="colorSnackBarError">#F72400</color>
+
+    <color name="colorLightGrey">#F1F1F1</color>
+</resources>
