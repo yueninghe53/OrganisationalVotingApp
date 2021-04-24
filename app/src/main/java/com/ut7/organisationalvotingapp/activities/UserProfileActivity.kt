@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.ut7.organisationalvotingapp.R
+import com.ut7.organisationalvotingapp.firestore.FirestoreClass
 import com.ut7.organisationalvotingapp.models.User
 import com.ut7.organisationalvotingapp.utils.Constants
 import kotlinx.android.synthetic.main.activity_user_profile.*
@@ -24,24 +25,25 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
     /**
      * This function is auto created by Android when the Activity Class is created.
      */
+    private lateinit var mUserDetails: User
+
     override fun onCreate(savedInstanceState: Bundle?) {
         //This call the parent constructor
         super.onCreate(savedInstanceState)
         // This is used to align the xml view to this class
         setContentView(R.layout.activity_user_profile)
 
-        var userDetails: User = User()
         if(intent.hasExtra(Constants.EXTRA_USER_DETAILS)) {
             //Get user details from intent as a ParcelableExtra.
-            userDetails = intent.getParcelableExtra(Constants.EXTRA_USER_DETAILS)!!
+            mUserDetails = intent.getParcelableExtra(Constants.EXTRA_USER_DETAILS)!!
         }
 
         et_first_name.isEnabled = false
-        et_first_name.setText(userDetails.firstName)
+        et_first_name.setText(mUserDetails.firstName)
         et_last_name.isEnabled = false
-        et_last_name.setText(userDetails.lastName)
+        et_last_name.setText(mUserDetails.lastName)
         et_email.isEnabled = false
-        et_email.setText(userDetails.email)
+        et_email.setText(mUserDetails.email)
 
         iv_user_photo.setOnClickListener(this@UserProfileActivity)
         btn_submit.setOnClickListener(this@UserProfileActivity)
@@ -70,13 +72,43 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
                 }
 
                 R.id.btn_submit -> {
-                    if(validateUserProfileDetails() ){
-                        showErrorSnackBar("Your details are valid. You can update them.", false)
+                    if(validateUserProfileDetails()){
+                        //showErrorSnackBar("Your details are valid. You can update them.", false)
+                        val userHashMap = HashMap<String, Any>()
+                        val mobilenumber = et_mobile_number.text.toString().trim { it <= ' '}
+                        val gender = if(rb_male.isChecked) {
+                            Constants.MALE
+                        } else {
+                            Constants.FEMALE
                         }
+
+                        if(mobilenumber.isNotEmpty()) {
+                            userHashMap[Constants.MOBILE] = mobilenumber.toLong()
+                        }
+                        //key: gender value: female
+                        userHashMap[Constants.GENDER] = gender
+
+                        showProgressDialog(resources.getString(R.string.please_wait))
+
+                        FirestoreClass().updateUserProfileData(this, userHashMap)
+                    }
                 }
             }
         }
     }
+
+    fun userProfileUpdateSuccess() {
+        hideProgressDialog()
+        Toast.makeText(
+            this@UserProfileActivity,
+            resources.getString(R.string.msg_profile_update_success),
+            Toast.LENGTH_SHORT
+        ).show()
+
+        startActivity(Intent(this@UserProfileActivity, MainActivity::class.java))
+        finish()
+    }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

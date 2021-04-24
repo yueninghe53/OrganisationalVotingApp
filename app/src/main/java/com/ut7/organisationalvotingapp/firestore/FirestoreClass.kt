@@ -10,6 +10,7 @@ import com.google.firebase.firestore.SetOptions
 import com.ut7.organisationalvotingapp.models.User
 import com.ut7.organisationalvotingapp.activities.LoginActivity
 import com.ut7.organisationalvotingapp.activities.RegisterActivity
+import com.ut7.organisationalvotingapp.activities.UserProfileActivity
 import com.ut7.organisationalvotingapp.utils.Constants
 
 
@@ -114,5 +115,32 @@ class FirestoreClass {
                             e
                     )
                 }
+    }
+
+    fun updateUserProfileData(activity: Activity, userHashMap: HashMap<String, Any>) {
+        mFireStore.collection(Constants.USERS)
+            .document(getCurrentUserID())
+            .update(userHashMap)
+            .addOnSuccessListener {
+                when(activity) {
+                    is UserProfileActivity -> {
+                        activity.userProfileUpdateSuccess()
+                    }
+                }
+
+            }
+            .addOnFailureListener { e ->
+                when(activity) {
+                    is UserProfileActivity -> {
+                        activity.hideProgressDialog()
+                    }
+                }
+
+                Log.e(
+                    activity.javaClass.simpleName,
+                    "Error while updating user details.",
+                    e
+                )
+            }
     }
 }
