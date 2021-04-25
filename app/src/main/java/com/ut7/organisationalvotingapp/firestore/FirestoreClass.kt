@@ -11,9 +11,9 @@ import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.ut7.organisationalvotingapp.models.User
-import com.ut7.organisationalvotingapp.activities.LoginActivity
-import com.ut7.organisationalvotingapp.activities.RegisterActivity
-import com.ut7.organisationalvotingapp.activities.UserProfileActivity
+import com.ut7.organisationalvotingapp.ui.activities.LoginActivity
+import com.ut7.organisationalvotingapp.ui.activities.RegisterActivity
+import com.ut7.organisationalvotingapp.ui.activities.UserProfileActivity
 import com.ut7.organisationalvotingapp.utils.Constants
 
 
